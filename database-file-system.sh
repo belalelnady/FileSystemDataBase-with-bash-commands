@@ -7,10 +7,11 @@ create_table(){
 
     # get the table name and store it
     read -p "Enter table name: " table_name ; 
-    touch ./databases/$db_name/$table_name.txt  ./databases/$db_name/$table_name.meta;
+    touch ./databases/$db_name/$table_name.txt  ./databases/$db_name/.meta/$table_name.meta;
 
-    # declare a key value array (associative)
+    # declare a key value array (associative) and order to keep the keys to store in order
     declare -A table_head_array
+    declare -a order
 
     echo "Enter key-value pairs for the table column heads (column name : column value), seperated by colon : one per line. Type 'done' when finished: "
     while true; do
@@ -26,12 +27,13 @@ create_table(){
         
         # Store the key-value pair in an associative array
         table_head_array["$key_name"]="$value_type"
+        order+=("$key_name")
     done
 
 
    # Store the values in the meta file
-    for key in "${!table_head_array[@]}"; do
-        echo "$key: ${table_head_array[$key]}" >> ./databases/$db_name/$table_name.meta
+    for key in "${order[@]}"; do
+        echo "$key:${table_head_array[$key]}" >> ./databases/$db_name/.meta/$table_name.meta
     done
     echo "Your table has been created successfully"
 
@@ -45,23 +47,59 @@ drop_table(){
     # check if the file exist
     if [[ -e "$path.txt" ]]; then
         rm  "$path.txt" ;
-        rm  "$path.meta" ;
+        rm  "./databases/$db_name/.meta/$table_name.meta" ;
         echo "Table has been deleted."
     else  
          echo "Table does not exist"
     fi
 }
-
 insert_into_table(){
     db_name=$1
+    
     read -p "Enter table name: " table_name ;
     path="./databases/$db_name/$table_name"
 
-    # check if the file exist
+# check if the file exist
     if [[ ! -e "$path.txt" ]]; then
         echo "Table does not exist"
         return
     fi
+
+    # get the header data and store it into an associative array
+    declare -A header_array
+    declare -a order
+
+    # File containing key-value pairs
+    header_file="./databases/$db_name/.meta/$table_name.meta"
+
+    # Read the file line by line and store it in header_array
+    while IFS=":" read -r key value; do
+        # Store each key-value pair in the associative array
+        header_array["$key"]=$value
+        order+=("$key")
+    done < $header_file
+
+
+    # Display the header data
+    echo "column and type pairs from the table: "
+    header_text=""
+    for key in ${order[@]};do
+        header_text+="$key: ${header_array[$key]} | "
+    done
+    echo $header_text
+
+    # Data Validation 
+
+    # get the rows data
+    row_data=""
+    for key in ${order[@]};do
+    read -p "Enter the $key: " data
+    row_data+="$data:"
+    done
+    #remove the last character which is `:` and save it to the file
+    row_data=${row_data::-1}
+    echo $row_data >> "$path.txt"
+    echo "row inserted successfully"
 
 }
 # connect to DB by passing the DB name
