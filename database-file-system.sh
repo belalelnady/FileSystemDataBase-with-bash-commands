@@ -9,8 +9,10 @@ create_table(){
     read -p "Enter table name: " table_name ; 
     touch ./databases/$db_name/$table_name.txt  ./databases/$db_name/.meta/$table_name.meta;
 
-    # declare a key value array (associative) and order to keep the keys to store in order
+    #Declare a key value array (associative) 
+    # For the header data adn types (extract it to function later)
     declare -A table_head_array
+    #order array to keep the keys to store in order
     declare -a order
 
     echo "Enter key-value pairs for the table column heads (column name : column value), seperated by colon : one per line. Type 'done' when finished: "
@@ -54,19 +56,21 @@ drop_table(){
     fi
 }
 insert_into_table(){
-    db_name=$1
-    
-    read -p "Enter table name: " table_name ;
-    path="./databases/$db_name/$table_name"
+        db_name=$1
+        
+        read -p "Enter table name: " table_name ;
+        path="./databases/$db_name/$table_name"
 
-# check if the file exist
-    if [[ ! -e "$path.txt" ]]; then
-        echo "Table does not exist"
-        return
-    fi
+    # check if the table file exist
+        if [[ ! -e "$path.txt" ]]; then
+            echo "Table does not exist"
+            return
+        fi
 
-    # get the header data and store it into an associative array
+    #Declare a key value array (associative) 
+    # For the header data adn types (extract it to function later)
     declare -A header_array
+    #order array to keep the keys to store in order
     declare -a order
 
     # File containing key-value pairs
@@ -76,14 +80,16 @@ insert_into_table(){
     while IFS=":" read -r key value; do
         # Store each key-value pair in the associative array
         header_array["$key"]=$value
+      
         order+=("$key")
     done < $header_file
 
-
+        echo ${header_array[@]}
     # Display the header data
-    echo "column and type pairs from the table: "
+    echo "Columns of the table: "
     header_text=""
     for key in ${order[@]};do
+ 
         header_text+="$key: ${header_array[$key]} | "
     done
     echo $header_text
@@ -105,9 +111,10 @@ insert_into_table(){
 # connect to DB by passing the DB name
 connect_to_database() {
     read -p "Enter database name to connect : " db_name;
-
+    
     echo "Connected to $db_name"
     while true; do
+        echo "--------------------------------"
         echo "1. Create Table"
         echo "2. List Tables"
         echo "3. Drop Table"
@@ -116,6 +123,7 @@ connect_to_database() {
         echo "6. Delete From Table"
         echo "7. Update Table"
         echo "8. Disconnect"
+        echo "--------------------------------"
         read -p "Enter your choice number: " choice_number
 
         case "$choice_number" in
@@ -123,6 +131,7 @@ connect_to_database() {
             2) echo "available tables : $(ls ./databases/$db_name)" ;;
             3) drop_table $db_name;;
             4) insert_into_table $db_name ;;
+            5) . ./select_from_table.sh $db_name ;;
             8) break ;;
             *) echo "Invalid input. Try again" ;;
         esac
@@ -161,11 +170,13 @@ drop_database(){
 }
 # Main menu
 while true; do
+    echo "--------------------------------"
     echo "1. Create Database"
     echo "2. List Databases"
     echo "3. Connect To Databases"
     echo "4. Drop Database"
     echo "5. Exit"
+    echo "--------------------------------"
     read -p "Enter your choice number: " choice_number
 
     case "$choice_number" in
