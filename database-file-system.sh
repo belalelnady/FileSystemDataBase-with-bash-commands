@@ -52,10 +52,22 @@ drop_table(){
     fi
 }
 
+insert_into_table(){
+    db_name=$1
+    read -p "Enter table name: " table_name ;
+    path="./databases/$db_name/$table_name"
+
+    # check if the file exist
+    if [[ ! -e "$path.txt" ]]; then
+        echo "Table does not exist"
+        return
+    fi
+
+}
 # connect to DB by passing the DB name
 connect_to_database() {
+    read -p "Enter database name to connect : " db_name;
 
-    db_name="$1"
     echo "Connected to $db_name"
     while true; do
         echo "1. Create Table"
@@ -72,6 +84,7 @@ connect_to_database() {
             1) create_table $db_name;;
             2) echo "available tables : $(ls ./databases/$db_name)" ;;
             3) drop_table $db_name;;
+            4) insert_into_table $db_name ;;
             8) break ;;
             *) echo "Invalid input. Try again" ;;
         esac
@@ -81,7 +94,33 @@ connect_to_database() {
  }
 
 
+create_database(){
+    read -p "Enter database name: " db_name ;
 
+    # check if the directory exist
+    if [[ -d "./databases/$db_name" ]]; then
+        echo "Database $db_name already exists"
+        return
+    fi
+    mkdir -p ./databases/$db_name  ;
+    mkdir -p ./databases/$db_name/.meta  ;
+    echo "Database $db_name Created successfully" 
+
+}
+
+drop_database(){
+    read -p "Enter database name to be deleted : " db_name;
+  
+
+     # check if the directory exist
+    if [[ -d "./databases/$db_name" ]]; then
+        rm -rf "./databases/$db_name"
+        echo "Database $db_name deleted"
+    else
+        echo "Database $db_name doesn't exist"
+    fi
+
+}
 # Main menu
 while true; do
     echo "1. Create Database"
@@ -92,10 +131,10 @@ while true; do
     read -p "Enter your choice number: " choice_number
 
     case "$choice_number" in
-        1) read -p "Enter database name: " db_name && mkdir -p ./databases/$db_name ;;
+        1) create_database ;;
         2) ls ./databases ;;
-        3) read -p "Enter database name to connect : " db_name; connect_to_database $db_name ;;
-        4) read -p "Enter database name to be deleted : " db_name; rm -rf "./databases/$db_name";; 
+        3) connect_to_database ;;
+        4) drop_database;; 
         5) exit ;;
         *) echo "Invalid choice. Try again." ;;
     esac
