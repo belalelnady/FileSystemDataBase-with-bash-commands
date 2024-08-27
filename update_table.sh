@@ -53,8 +53,8 @@ update_in_column(){
             mapfile -t new_column < "$column_file"
 
             # Print the array to verify
-            echo "Names Array:"
-            echo ${new_column[@]}
+            echo "Values Array:"
+            echo "|${new_column[@]} |"
 
 
             # Initialize an empty 2D array
@@ -99,9 +99,10 @@ update_in_column(){
             # Write the updated 2D array to the file
             for (( i=0; i<${#lines[@]}; i++ )); do
                 row=""
-                for (( col=0; col<4; col++ )); do
+                for (( col=0; col<$num_columns; col++ )); do
                     row+="${myArray[$i,$col]}"
-                    if [[ $col -lt 3 ]]; then
+                    if [[ $col -lt $(($num_columns-1)) ]]; then
+                     
                         row+=":"
                     fi
                 done
@@ -116,8 +117,6 @@ update_in_column(){
             # for (( i=0; i<${#lines[@]}; i++ )); do
             #     echo "${myArray[$i,0]} ${myArray[$i,1]} ${myArray[$i,2]} ${myArray[$i,3]}"
             # done
-
-            echo "Data has been saved to $output_file"
 
 
 

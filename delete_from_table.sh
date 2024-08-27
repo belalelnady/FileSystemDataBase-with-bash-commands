@@ -25,14 +25,15 @@ delete_row_number(){
 
     # get numbers of rows
     table_rows_number=$(awk 'END { print NR }' ./databases/$db_name/$table_name.txt)
-    if [[ $row_number -ge $table_rows_number ]]; then
+    echo "available rows $table_rows_number"
+    if [[ $row_number -gt $table_rows_number ]]; then
         echo "Enter a valid value"
         return
     fi
    
     #-i Edits original file directly.
     sed -i "${row_number}d" ./databases/$db_name/$table_name.txt
-    echo "Row has been deleted"
+    echo " $row_number Row has been deleted"
 
 }
 # --------------------Delete column --------------------

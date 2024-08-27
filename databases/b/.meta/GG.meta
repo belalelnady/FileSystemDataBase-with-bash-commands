@@ -1,0 +1,5 @@
+ID:int
+Name:String
+group:string
+flag:bool
+key:json
