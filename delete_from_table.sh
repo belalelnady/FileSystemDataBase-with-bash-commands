@@ -1,30 +1,21 @@
 # Global Variables
 #get the db_name from sourcing
 db_name=$1
-#table name from select_from_table
 table_name=""
 
-
-# --------------GEt HEADER DATA----------------
-
-
-#To-Do  --------------------------------------------------
-select_all() {
-    echo $header_text
-    # NF number of fields 
-    awk -F: '{
-    for (i=1; i<=NF; i++) { 
-        printf "%s", $i
-        printf " | "
-            }
-        printf "\n"
-    }' ./databases/$db_name/$table_name.txt
+#To-Do
+# Delete row with word 
+# Delete Row With Row Number 
+delete_row_number(){
+    read -p "Enter the row number : " row_number
+    sed -i "${row_number}d" ./databases/$db_name/$table_name.txt
 }
-# --------------------------------------------------
-# get_number_of_rows(){
-#         # END is there to ONLY print the LAST action of the command
-#          awk 'END { print "Number of rows is : " NR }' ./databases/$db_name/$table_name.txt
-# }
+# Delete column 
+# Delete With condition 
+
+
+
+
 # ---------------------
 
 select_column_by_header_name(){
@@ -65,7 +56,7 @@ select_row_by_word(){
 
 
 
-select_from_table(){
+delete_from_table(){
 
     # get table name
     read -p "Enter table name: " table_name ;
@@ -96,7 +87,6 @@ select_from_table(){
     header_text=""
     for key in ${order[@]};do
         header_text+="$key | "
-       
     done
 
 
@@ -106,8 +96,8 @@ select_from_table(){
     # Select menu
     while true; do
         echo "--------------------------------"
-        echo "1. Select All"
-        echo "2. Select Column By Header Name"
+        echo "1. Delete row with word "
+        echo "2. Delete Row With Row Number"
         echo "3. Select By Row Number"
         echo "4. Select Row By Word"
         echo "5. Back"
@@ -116,7 +106,7 @@ select_from_table(){
 
         case "$choice_number" in
             1) select_all ;;
-            2) select_column_by_header_name ;;
+            2) delete_row_number ;;
             3) select_by_row_number ;;
             4) select_row_by_word;; 
             5) break ;;
@@ -128,4 +118,4 @@ select_from_table(){
    
 }
 
-select_from_table
+delete_from_table
