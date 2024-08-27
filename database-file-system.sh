@@ -90,7 +90,6 @@ insert_into_table(){
     echo "Columns of the table: "
     header_text=""
     for key in ${order[@]};do
- 
         header_text+="$key: ${header_array[$key]} | "
     done
     echo $header_text
@@ -139,6 +138,7 @@ connect_to_database() {
             4) insert_into_table $db_name ;;
             5) . ./select_from_table.sh $db_name ;;
             6) . ./delete_from_table.sh  $db_name ;;
+            7) . ./update_table.sh $db_name ;;
             8) break ;;
             *) echo "Invalid input. Try again" ;;
         esac

@@ -1,6 +1,6 @@
-2:ahmed:group2:none
-3:belal:group3:none
-3:belal-kk:group3:none
-4:bl:group3:none
-5:bell:group5:bone
-6:blal:group6:nobe
+2:bob:c:null
+2:dod:c:n
+2:gog:c:n
+2:aoa:c:n
+2:aa:c:n
+2:xx:c:n
