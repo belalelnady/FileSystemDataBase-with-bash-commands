@@ -8,13 +8,13 @@
   - Seperate functions to files
   -
 ---
-## Structure of the 
+## Structure of the menus
 Main Menu:
   - Create Database
   - List Databases
   - Connect To Databases
   - Drop Database
----
+
 ## table Menu:
   - Create Table 
   - List Tables
@@ -23,20 +23,20 @@ Main Menu:
   - Select From Table
   - Delete From Table
   - Update Table
----
+
 ## - Select Menu:
   - Select All
   - Select Column By Header Name
   - Select By Row Number
   - Select Row By Word
   - Back
----
+
 ## - Delete Menu:
   - Delete rows with a word
   - Delete Row With row Number
   - Delete Column with header name
   - Back
----
+
 ## - Delete Menu:
   - Update a Word in Rows
   - Update Column
