@@ -1,4 +1,4 @@
 ID:Int
-Name:String
-Group:String
-Data:null
+Name:string
+Group:string
+Data:string

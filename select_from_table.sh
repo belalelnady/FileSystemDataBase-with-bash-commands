@@ -46,6 +46,7 @@ select_column_by_header_name(){
     #  no match for header name  
     if [[ -z $header_number ]]; then
         echo "This header doesn't exist"
+         return
     fi
     # -v  define a variable and assign it a value before awk starts processing the input.
     awk -F: -v col=$header_number '{ print $col }' ./databases/$db_name/$table_name.txt
@@ -57,7 +58,7 @@ select_by_row_number(){
 }
 # ---------------------------------
 select_row_by_word(){
-    read -p "Enter word name : " word
+    read -p "Enter the word : " word
     grep -i  $word ./databases/$db_name/$table_name.txt
 }
 # --------------------------------------------------

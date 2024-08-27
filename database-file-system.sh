@@ -55,6 +55,7 @@ drop_table(){
          echo "Table does not exist"
     fi
 }
+
 insert_into_table(){
         db_name=$1
         
@@ -73,7 +74,7 @@ insert_into_table(){
     #order array to keep the keys to store in order
     declare -a order
 
-    # File containing key-value pairs
+    # meta data file 
     header_file="./databases/$db_name/.meta/$table_name.meta"
 
     # Read the file line by line and store it in header_array
@@ -110,9 +111,14 @@ insert_into_table(){
 }
 # connect to DB by passing the DB name
 connect_to_database() {
-    read -p "Enter database name to connect : " db_name;
-    
-    echo "Connected to $db_name"
+    read -p "Enter database name to connect : " db_name 
+
+     # check if the directory exist
+    if [[ ! -d "./databases/$db_name" ]]; then
+        echo "Database ( $db_name ) does not exists"
+        return 
+    fi
+  
     while true; do
         echo "--------------------------------"
         echo "1. Create Table"
@@ -132,6 +138,7 @@ connect_to_database() {
             3) drop_table $db_name;;
             4) insert_into_table $db_name ;;
             5) . ./select_from_table.sh $db_name ;;
+            6) . ./delete_from_table.sh  $db_name ;;
             8) break ;;
             *) echo "Invalid input. Try again" ;;
         esac
